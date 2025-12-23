@@ -54,6 +54,7 @@ const About = () => {
                                 </p>
                                 <p>
                                     I specialize in the <span className="text-brand-teal font-semibold">MERN Stack (MongoDB, Express, React, Node.js)</span> with a solid foundation in Data Structures and Algorithms. Alongside full-stack development, I’m actively working in the AI automation space, building intelligent systems using tools like n8n, AI agents, chatbots, and workflow automation.
+                            </p>
                                 <p>
                                     From developing scalable web applications to automating business processes and extracting insights through data scraping, I enjoy solving real-world problems that demand both logic and creativity.
 
