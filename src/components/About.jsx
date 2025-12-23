@@ -82,12 +82,11 @@ const About = () => {
                   <span className='text-brand-blue font-semibold'>
                     Mohd Ahtesham
                   </span>
-                  , a driven developer who has completed his BCA from Meena Saha
-                  Institute of Technology & Management. My journey began with an
-                  interest in how things operate on the internet, which swiftly
-                  developed into a passion for problem-solving and programming.
+                  , a passionate developer and BCA graduate from Meena Saha
+                  Institute of Technology & Management. My journey began with a
+                  curiosity about how the web works, which quickly evolved into
+                  a strong passion for programming and problem-solving.
                 </p>
-
                 <p>
                   I specialize in the{" "}
                   <span className='text-brand-teal font-semibold'>
@@ -98,7 +97,6 @@ const About = () => {
                   AI automation space, building intelligent systems using tools
                   like n8n, AI agents, chatbots, and workflow automation.
                 </p>
-
                 <p>
                   From developing scalable web applications to automating
                   business processes and extracting insights through data
