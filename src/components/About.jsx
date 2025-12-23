@@ -49,13 +49,16 @@ const About = () => {
 
                             <div className="space-y-4 text-gray-300 text-sm md:text-base leading-relaxed mb-8">
                                 <p>
-                                    Hello! I'm <span className="text-brand-blue font-semibold">Mohd Ahtesham</span>, a passionate developer currently pursuing my BCA at Meena Saha Institute of Technology & Management. My journey started with a curiosity for how things work on the web, which quickly evolved into a deep love for programming and problem-solving.
+                                    Hello! I'm <span className="text-brand-blue font-semibold">Mohd Ahtesham</span>, a driven developer who is presently enrolled in Meena Saha Institute of Technology & Management's BCA program. My journey began with an interest in how things operate on the internet, which swiftly developed into a passion for problem-solving and programming.
+
+
                                 </p>
                                 <p>
-                                    I specialize in the <span className="text-brand-teal font-semibold">MERN Stack (MongoDB, Express, React, Node.js)</span> and have a strong foundation in Data Structures and Algorithms. Beyond traditional web development, I'm actively expanding my horizons into Artificial Intelligence and Machine Learning, exploring how AI can automate workflows and create smarter user experiences.
-                                </p>
+                                    I specialize in the <span className="text-brand-teal font-semibold">MERN Stack (MongoDB, Express, React, Node.js)</span> with a solid foundation in Data Structures and Algorithms. Alongside full-stack development, I’m actively working in the AI automation space, building intelligent systems using tools like n8n, AI agents, chatbots, and workflow automation.
                                 <p>
-                                    Whether it's building a complex e-commerce platform, automating business processes with n8n, or scraping data for insights, I thrive on challenges that require both creativity and logic. I'm driven by the goal of becoming a proficient Full-Stack AI Engineer who can build the next generation of intelligent web applications.
+                                    From developing scalable web applications to automating business processes and extracting insights through data scraping, I enjoy solving real-world problems that demand both logic and creativity.
+
+                                    My goal is to grow as a Full-Stack AI Engineer, building next-generation intelligent web products that deliver real business impact.
                                 </p>
                             </div>
 
