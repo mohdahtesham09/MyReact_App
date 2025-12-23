@@ -49,8 +49,7 @@ const About = () => {
 
                             <div className="space-y-4 text-gray-300 text-sm md:text-base leading-relaxed mb-8">
                                 <p>
-                                    Hello! I'm <span className="text-brand-blue font-semibold">Mohd Ahtesham</span>, a driven developer who is presently enrolled in Meena Saha Institute of Technology & Management's BCA program. My journey began with an interest in how things operate on the internet, which swiftly developed into a passion for problem-solving and programming.
-
+                                    Hello! I'm <span className="text-brand-blue font-semibold">Mohd Ahtesham</span>, a passionate developer and BCA graduate from Meena Saha Institute of Technology & Management. My journey began with a curiosity about how the web works, which quickly evolved into a strong passion for programming and problem-solving.
 
                                 </p>
                                 <p>
