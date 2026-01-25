@@ -10,9 +10,7 @@ const Navbar = () => {
         { name: 'Skills', href: '#skills' },
         { name: 'Projects', href: '#projects' },
         { name: 'Vibe Coding', href: '#vibe' },
-        { name: 'Services', href: '#services' },
         { name: 'Experience', href: '#experience' },
-        { name: 'Testimonials', href: '#testimonials' },
         { name: 'Contact', href: '#contact' },
     ];
 
