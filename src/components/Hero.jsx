@@ -125,7 +125,7 @@ const Hero = () => {
               View Projects
             </a>
             <a
-              href='https://url-shortener.me/CHC8'
+              href='https://drive.google.com/file/d/1p4sQy8GNAnO50Pd8PeaUOjfyBZTv-8bM/view?usp=drive_link'
               className='px-8 py-4 rounded-full bg-transparent border border-brand-teal/50 text-brand-teal hover:bg-brand-teal/10 font-bold flex items-center gap-2 transition-all hover:scale-105'
             >
               <Download size={20} /> Download CV
