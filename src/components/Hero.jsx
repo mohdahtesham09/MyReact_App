@@ -125,7 +125,7 @@ const Hero = () => {
               View Projects
             </a>
             <a
-              href='../../public/resume.pdf'
+              href='https://url-shortener.me/CHC8'
               className='px-8 py-4 rounded-full bg-transparent border border-brand-teal/50 text-brand-teal hover:bg-brand-teal/10 font-bold flex items-center gap-2 transition-all hover:scale-105'
             >
               <Download size={20} /> Download CV
