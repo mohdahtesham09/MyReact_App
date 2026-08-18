@@ -1,132 +1,140 @@
-import React from "react";
-import {
-  User,
-  Github,
-  Linkedin,
-  Instagram,
-  MapPin,
-  Code,
-  Terminal,
-} from "lucide-react";
+import React, { useEffect, useRef } from "react";
+import { Github, Linkedin, Instagram, ArrowRight } from "lucide-react";
+import { GITHUB_URL, LINKEDIN_URL, INSTAGRAM_URL } from "../config";
+import { personalInfo, journeyPath } from "../data/portfolioData";
+
+const capabilities = [
+  {
+    title: "Full Stack Development",
+    desc: "Building complete React frontends connected to scalable Node.js/Express backends.",
+    accent: "var(--accent-secondary)",
+  },
+  {
+    title: "Backend Engineering",
+    desc: "REST APIs, database design, JWT auth and clean MVC architecture.",
+    accent: "#34D399",
+  },
+  {
+    title: "AI / GenAI Integration",
+    desc: "LLM integrations, RAG pipelines and intelligent AI-powered web experiences.",
+    accent: "var(--accent-primary)",
+  },
+  {
+    title: "Automation",
+    desc: "n8n workflows, Vapi voice agents and webhook-driven business automation.",
+    accent: "var(--accent-warm)",
+  },
+];
 
 const About = () => {
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((e) => {
+          if (e.isIntersecting) e.target.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
+        }),
+      { threshold: 0.15 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id='about' className='py-20 relative'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <h2 className='text-3xl md:text-4xl font-bold text-center mb-16 text-white relative inline-block left-1/2 -translate-x-1/2'>
-          About Me
-          <span className='absolute -bottom-4 left-1/2 -translate-x-1/2 w-12 h-1 bg-brand-blue rounded-full'></span>
-        </h2>
+    <section id="about" className="py-20" style={{ backgroundColor: "var(--bg-base)" }} ref={sectionRef}>
+      <div className="section-container">
+        {/* Section header */}
+        <div className="mb-14 reveal">
+          <p className="section-label">About</p>
+          <h2 className="section-heading">Building with code, AI & automation.</h2>
+        </div>
 
-        <div className='grid grid-cols-1 lg:grid-cols-3 gap-8'>
-          {/* Left Column - Profile Card */}
-          <div className='lg:col-span-1 h-full'>
-            <div className='glass-card p-8 flex flex-col items-center text-center h-full bg-[#0F172A]/60 border-white/10'>
-              <div className='w-32 h-32 rounded-full border-4 border-white/5 bg-white/5 flex items-center justify-center mb-6 overflow-hidden relative shadow-lg shadow-brand-blue/20'>
-                <img
-                  src='/profile.jpg'
-                  alt='Mohd Ahtesham'
-                  className='w-full h-full object-cover'
-                />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          {/* Left — Bio + progression + social */}
+          <div className="lg:col-span-5 reveal">
+            <div
+              className="rounded-2xl p-6 h-full flex flex-col gap-6"
+              style={{ backgroundColor: "var(--bg-surface)", border: "1px solid var(--border-subtle)" }}
+            >
+              {/* Exact bio text */}
+              <div className="space-y-3 text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                <p style={{ color: "var(--text-primary)" }}>{personalInfo.bio}</p>
               </div>
 
-              <h3 className='text-2xl font-bold text-white mb-2'>
-                Mohd Ahtesham
-              </h3>
-              <p className='text-brand-teal font-medium text-sm mb-6'>
-                Aspiring Full-Stack Developer | Future AI Engineer
-              </p>
-
-              <div className='flex items-center text-gray-400 text-sm mb-8'>
-                <MapPin size={16} className='mr-2' />
-                Gonda, Uttar Pradesh, India
+              {/* Engineering progression (NO dates!) */}
+              <div>
+                <p className="text-[10px] uppercase tracking-wider font-semibold mb-4" style={{ color: "var(--text-muted)" }}>
+                  Engineering Progression
+                </p>
+                <div className="flex items-center gap-1 flex-wrap">
+                  {journeyPath.map((step, i) => (
+                    <React.Fragment key={step}>
+                      <div
+                        className="px-2.5 py-1 rounded-md text-[10.5px] font-semibold transition-all"
+                        style={{
+                          backgroundColor: i === journeyPath.length - 1 ? "rgba(124,108,252,0.15)" : "var(--bg-elevated)",
+                          color: i === journeyPath.length - 1 ? "var(--accent-primary)" : "var(--text-secondary)",
+                          border: `1px solid ${i === journeyPath.length - 1 ? "rgba(124,108,252,0.30)" : "var(--border-subtle)"}`,
+                        }}
+                      >
+                        {step}
+                      </div>
+                      {i < journeyPath.length - 1 && (
+                        <ArrowRight size={10} style={{ color: "var(--border-mid)", flexShrink: 0 }} />
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
               </div>
 
-              <div className='flex space-x-4 mt-auto'>
-                <a
-                  href='https://linkedin.com/in/ahteshammohd094/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='p-3 bg-white/5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/5'
-                >
-                  <Linkedin size={20} />
-                </a>
-                <a
-                  href='https://github.com/mohdahtesham09'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='p-3 bg-white/5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/5'
-                >
-                  <Github size={20} />
-                </a>
-                <a
-                  href='https://instagram.com/fsd.ahtesham/'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='p-3 bg-white/5 rounded-lg text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/5'
-                >
-                  <Instagram size={20} />
-                </a>
+              {/* Social links */}
+              <div
+                className="pt-5 mt-auto flex items-center gap-2"
+                style={{ borderTop: "1px solid var(--border-subtle)" }}
+              >
+                {[
+                  { href: GITHUB_URL, Icon: Github, label: "GitHub" },
+                  { href: LINKEDIN_URL, Icon: Linkedin, label: "LinkedIn" },
+                  { href: INSTAGRAM_URL, Icon: Instagram, label: "Instagram" },
+                ].map(({ href, Icon, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-2 rounded-lg transition-all"
+                    style={{ backgroundColor: "var(--bg-elevated)", border: "1px solid var(--border-subtle)", color: "var(--text-secondary)" }}
+                    title={label}
+                    onMouseEnter={(e) => { e.currentTarget.style.color = "var(--text-primary)"; e.currentTarget.style.borderColor = "var(--border-mid)"; }}
+                    onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-secondary)"; e.currentTarget.style.borderColor = "var(--border-subtle)"; }}
+                  >
+                    <Icon size={14} />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Right Column - My Journey */}
-          <div className='lg:col-span-2'>
-            <div className='glass-card p-8 md:p-10 bg-[#0F172A]/60 border-white/10 h-full'>
-              <h3 className='text-2xl font-bold text-white mb-6'>My Journey</h3>
-
-              <div className='space-y-4 text-gray-300 text-sm md:text-base leading-relaxed mb-8'>
-                <p>
-                  Hello! I'm{" "}
-                  <span className='text-brand-blue font-semibold'>
-                    Mohd Ahtesham
-                  </span>
-                  , a passionate developer and BCA graduate from Meena Saha
-                  Institute of Technology & Management. My journey began with a
-                  curiosity about how the web works, which quickly evolved into
-                  a strong passion for programming and problem-solving.
-                </p>
-                <p>
-                  I specialize in the{" "}
-                  <span className='text-brand-teal font-semibold'>
-                    MERN Stack (MongoDB, Express, React, Node.js)
-                  </span>{" "}
-                  with a solid foundation in Data Structures and Algorithms.
-                  Alongside full-stack development, I’m actively working in the
-                  AI automation space, building intelligent systems using tools
-                  like n8n, AI agents, chatbots, and workflow automation.
-                </p>
-                <p>
-                  From developing scalable web applications to automating
-                  business processes and extracting insights through data
-                  scraping, I enjoy solving real-world problems that demand both
-                  logic and creativity. My goal is to grow as a Full-Stack AI
-                  Engineer, building next-generation intelligent web products
-                  that deliver real business impact.
+          {/* Right — Capability cards */}
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {capabilities.map((cap, i) => (
+              <div
+                key={cap.title}
+                className={`rounded-2xl p-5 card card-hover reveal stagger-${i + 1}`}
+              >
+                <div
+                  className="w-1 h-8 rounded-full mb-4"
+                  style={{ backgroundColor: cap.accent }}
+                />
+                <h4 className="text-sm font-semibold mb-2" style={{ color: "var(--text-primary)" }}>
+                  {cap.title}
+                </h4>
+                <p className="text-[12px] leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                  {cap.desc}
                 </p>
               </div>
-
-              <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
-                <div className='bg-brand-blue/10 p-5 rounded-xl border border-brand-blue/20'>
-                  <div className='flex items-center text-brand-blue mb-2 font-bold'>
-                    <Code size={18} className='mr-2' /> Frontend
-                  </div>
-                  <p className='text-gray-400 text-sm'>
-                    Crafting responsive, accessible, and pixel-perfect user
-                    interfaces.
-                  </p>
-                </div>
-                <div className='bg-brand-teal/10 p-5 rounded-xl border border-brand-teal/20'>
-                  <div className='flex items-center text-brand-teal mb-2 font-bold'>
-                    <Terminal size={18} className='mr-2' /> Backend
-                  </div>
-                  <p className='text-gray-400 text-sm'>
-                    Building scalable APIs and secure server-side architectures.
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

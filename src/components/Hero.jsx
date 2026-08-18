@@ -1,242 +1,713 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import {
-  Code,
-  Server,
-  Database,
-  Brain,
-  Globe,
-  Terminal,
+  ArrowRight,
+  Github,
+  Linkedin,
+  FileText,
+  Mic,
+  MicOff,
+  Send,
+  Sparkles,
   Bot,
-  Cloud,
-  Layout,
-  Download,
+  Loader2,
+  Terminal,
+  Cpu,
+  Zap,
+  Database,
+  Globe,
+  Code2,
 } from "lucide-react";
+import { motion, useMotionValue, useSpring } from "framer-motion";
+import {
+  RESUME_VIEW_URL,
+  GITHUB_URL,
+  LINKEDIN_URL,
+  CONTACT_EMAIL,
+} from "../config";
+import { generateClientAIResponse } from "../utils/aiKnowledgeEngine";
 
-const Typewriter = ({ text, speed = 100 }) => {
-  const [displayText, setDisplayText] = useState("");
+// ── AI Ask Bar Suggestion Chips ───────────────────────────────────────────────
+const SUGGESTION_CHIPS = [
+  { label: "View Projects", query: "What projects has Ahtesham built?" },
+  {
+    label: "Tech Stack",
+    query: "What is his tech stack and strongest skills?",
+  },
+  {
+    label: "GenAI Experience",
+    query: "What AI and GenAI experience does he have?",
+  },
+  { label: "Resume", query: "Give me Ahtesham's resume." },
+  { label: "Freelance", query: "Is he available for freelance work?" },
+];
+
+const handleAnchorClick = (e, url) => {
+  if (url.startsWith("#")) {
+    e.preventDefault();
+    const id = url.replace("#", "");
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }
+};
+
+// ── Inline markdown renderer ──────────────────────────────────────────────────
+const renderMd = (text) => {
+  if (!text) return null;
+  return text.split("\n").map((line, i) => {
+    const trimmed = line.trim();
+    const isBullet = trimmed.startsWith("* ") || trimmed.startsWith("- ");
+    const content = isBullet ? trimmed.slice(2) : line;
+    const parts = [];
+    const regex = /(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)/g;
+    let last = 0;
+    let m;
+    while ((m = regex.exec(content)) !== null) {
+      if (m.index > last) parts.push(content.slice(last, m.index));
+      if (m[1]) {
+        const label = m[2];
+        const url = m[3];
+        const isInternal = url.startsWith("#");
+        parts.push(
+          <a
+            key={m.index}
+            href={url}
+            target={isInternal ? "_self" : "_blank"}
+            rel='noopener noreferrer'
+            onClick={(e) => handleAnchorClick(e, url)}
+            className='underline font-semibold my-0.5'
+            style={{
+              color: isInternal
+                ? "var(--accent-primary)"
+                : "var(--accent-secondary)",
+            }}
+          >
+            {label}
+          </a>,
+        );
+      } else if (m[4]) {
+        parts.push(
+          <strong key={m.index} style={{ color: "var(--text-primary)" }}>
+            {m[5]}
+          </strong>,
+        );
+      }
+      last = m.index + m[0].length;
+    }
+    if (last < content.length) parts.push(content.slice(last));
+    if (!trimmed) return <div key={i} className='h-1.5' />;
+    return isBullet ? (
+      <div key={i} className='flex gap-2 my-0.5 pl-1'>
+        <span style={{ color: "var(--accent-secondary)" }}>•</span>
+        <div>{parts}</div>
+      </div>
+    ) : (
+      <div key={i} className='my-0.5'>
+        {parts}
+      </div>
+    );
+  });
+};
+
+// ── Hero AI Workspace Visual (right panel) ────────────────────────────────────
+const AIWorkspacePanel = () => {
+  const [cursorVisible, setCursorVisible] = useState(true);
+  const [nodeActive, setNodeActive] = useState(0);
 
   useEffect(() => {
-    let i = 0;
-    const timer = setInterval(() => {
-      if (i < text.length) {
-        setDisplayText((prev) => prev + text.charAt(i));
-        i++;
-      } else {
-        clearInterval(timer);
-      }
-    }, speed);
+    const t1 = setInterval(() => setCursorVisible((v) => !v), 600);
+    const t2 = setInterval(() => setNodeActive((n) => (n + 1) % 4), 1800);
+    return () => {
+      clearInterval(t1);
+      clearInterval(t2);
+    };
+  }, []);
 
-    return () => clearInterval(timer);
-  }, [text, speed]);
+  const nodes = [
+    { label: "React UI", icon: Globe, color: "#22D3EE" },
+    { label: "Node JS", icon: Terminal, color: "#34D399" },
+    { label: "LLM / LangChain", icon: Cpu, color: "var(--accent-primary)" },
+    { label: "MongoDB", icon: Database, color: "#F59E0B" },
+  ];
 
   return (
-    <span>
-      {displayText}
-      <motion.span
-        animate={{ opacity: [0, 1, 0] }}
-        transition={{ repeat: Infinity, duration: 0.8 }}
-        className='text-brand-teal ml-1'
-      >
-        |
-      </motion.span>
-    </span>
-  );
-};
-
-const RotatingIcon = ({
-  icon: Icon,
-  radius,
-  duration,
-  reverse = false,
-  color,
-}) => {
-  return (
-    <motion.div
-      className='absolute left-1/2 top-1/2'
+    <div
+      className='relative rounded-2xl overflow-hidden'
       style={{
-        transformOrigin: "center center",
-        // We'll define the sizing here but the animation happens via framer
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-subtle)",
+        boxShadow: "var(--shadow-lg)",
       }}
-      animate={{ rotate: reverse ? -360 : 360 }}
-      transition={{ duration: duration, repeat: Infinity, ease: "linear" }}
     >
-      {/* The offset wrapper moves the icon out to the radius */}
+      {/* Window chrome */}
       <div
-        className='absolute -translate-x-1/2 -translate-y-1/2'
-        style={{ transform: `translateX(${radius}px)` }}
+        className='flex items-center justify-between px-4 py-3'
+        style={{
+          borderBottom: "1px solid var(--border-subtle)",
+          backgroundColor: "var(--bg-elevated)",
+        }}
       >
-        {/* The Icon wrapper counter-rotates to keep the icon upright */}
-        <motion.div
-          animate={{ rotate: reverse ? 360 : -360 }}
-          transition={{ duration: duration, repeat: Infinity, ease: "linear" }}
-          className={`p-3 rounded-2xl bg-[#0F172A] border border-white/10 shadow-lg ${color}`}
-        >
-          <Icon size={24} />
-        </motion.div>
+        <div className='flex items-center gap-2.5'>
+          <div className='flex gap-1.5'>
+            <span className='w-2.5 h-2.5 rounded-full bg-rose-500/70' />
+            <span className='w-2.5 h-2.5 rounded-full bg-amber-500/70' />
+            <span className='w-2.5 h-2.5 rounded-full bg-emerald-500/70' />
+          </div>
+          <span
+            className='text-[10px] font-mono'
+            style={{ color: "var(--text-muted)" }}
+          >
+            ahtesham.dev
+          </span>
+        </div>
+        <div className='flex items-center gap-1.5'>
+          <span className='w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulseDot' />
+          <span className='text-[9px] font-medium text-emerald-400'>
+            online
+          </span>
+        </div>
       </div>
-    </motion.div>
+
+      {/* Code editor area */}
+      <div
+        className='p-4 font-mono text-[10.5px] leading-[1.7]'
+        style={{
+          backgroundColor: "var(--bg-input)",
+          borderBottom: "1px solid var(--border-subtle)",
+        }}
+      >
+        <div>
+          <span style={{ color: "#c792ea" }}>const</span>{" "}
+          <span style={{ color: "#82aaff" }}>developer</span> = {"{"}
+        </div>
+        <div className='pl-4'>
+          <span style={{ color: "#c3e88d" }}>name</span>:{" "}
+          <span style={{ color: "#f78c6c" }}>"Mohd Ahtesham"</span>,
+        </div>
+        <div className='pl-4'>
+          <span style={{ color: "#c3e88d" }}>role</span>:{" "}
+          <span style={{ color: "#f78c6c" }}>"Full Stack & AI Dev"</span>,
+        </div>
+        <div className='pl-4'>
+          <span style={{ color: "#c3e88d" }}>stack</span>: [
+          <span style={{ color: "#f78c6c" }}>"React"</span>,{" "}
+          <span style={{ color: "#f78c6c" }}>"Node"</span>,{" "}
+          <span style={{ color: "#f78c6c" }}>"FastAPI"</span>],
+        </div>
+        <div className='pl-4'>
+          <span style={{ color: "#c3e88d" }}>ai</span>: [
+          <span style={{ color: "#f78c6c" }}>"Groq"</span>,{" "}
+          <span style={{ color: "#f78c6c" }}>"OpenAI"</span>,{" "}
+          <span style={{ color: "#f78c6c" }}>"RAG"</span>,{" "}
+          <span style={{ color: "#f78c6c" }}>"n8n"</span>],
+        </div>
+        <div className='pl-4'>
+          <span style={{ color: "#c3e88d" }}>status</span>:{" "}
+          <span style={{ color: "#c3e88d" }}>"Available"</span>
+          <span
+            className='inline-block w-[2px] h-[12px] ml-0.5 align-middle'
+            style={{
+              backgroundColor: "var(--accent-secondary)",
+              opacity: cursorVisible ? 1 : 0,
+            }}
+          />
+        </div>
+        <div>{"}"}</div>
+      </div>
+
+      {/* Architecture nodes */}
+      <div className='p-4'>
+        <p
+          className='text-[9px] font-semibold uppercase tracking-wider mb-3'
+          style={{ color: "var(--text-muted)" }}
+        >
+          System Architecture
+        </p>
+        <div className='grid grid-cols-2 gap-2'>
+          {nodes.map((node, i) => {
+            const Icon = node.icon;
+            const active = nodeActive === i;
+            return (
+              <div
+                key={node.label}
+                className='flex items-center gap-2 rounded-lg px-2.5 py-2 transition-all duration-500'
+                style={{
+                  backgroundColor: active
+                    ? `${node.color}14`
+                    : "var(--bg-elevated)",
+                  border: `1px solid ${active ? `${node.color}40` : "var(--border-subtle)"}`,
+                }}
+              >
+                <Icon
+                  size={12}
+                  style={{ color: active ? node.color : "var(--text-muted)" }}
+                />
+                <span
+                  className='text-[10px] font-medium'
+                  style={{
+                    color: active ? node.color : "var(--text-secondary)",
+                  }}
+                >
+                  {node.label}
+                </span>
+                {active && (
+                  <span
+                    className='ml-auto w-1.5 h-1.5 rounded-full animate-pulseDot'
+                    style={{ backgroundColor: node.color }}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Status bar */}
+        <div
+          className='mt-3 rounded-lg px-3 py-2 flex items-center gap-2'
+          style={{
+            backgroundColor: "var(--bg-elevated)",
+            border: "1px solid var(--border-subtle)",
+          }}
+        >
+          <Terminal size={10} style={{ color: "var(--accent-secondary)" }} />
+          <span
+            className='text-[9.5px] font-mono'
+            style={{ color: "var(--text-muted)" }}
+          >
+            npm run dev
+          </span>
+          <span className='ml-auto text-[9px] font-medium text-emerald-400 flex items-center gap-1'>
+            <span className='w-1 h-1 rounded-full bg-emerald-400 animate-pulseDot' />{" "}
+            Running
+          </span>
+        </div>
+
+        {/* Tech pills */}
+        <div className='flex flex-wrap gap-1.5 mt-3'>
+          {["React", "Node.js", "FastAPI", "Groq API", "n8n", "RAG"].map(
+            (t) => (
+              <span key={t} className='ref-tech-pill text-[9.5px]'>
+                {t}
+              </span>
+            ),
+          )}
+        </div>
+      </div>
+    </div>
   );
 };
 
-const Hero = () => {
+// ── Main Hero Component ───────────────────────────────────────────────────────
+const Hero = ({ onOpenAIChat }) => {
+  const [askInput, setAskInput] = useState("");
+  const [aiResponse, setAiResponse] = useState("");
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceSupported, setVoiceSupported] = useState(false);
+  const [hasAsked, setHasAsked] = useState(false);
+  const inputRef = useRef(null);
+  const abortRef = useRef(null);
+
+  // Parallax mouse tracking
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 30 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 30 });
+
+  useEffect(() => {
+    const handle = (e) => {
+      const { innerWidth, innerHeight } = window;
+      mouseX.set((e.clientX / innerWidth - 0.5) * 12);
+      mouseY.set((e.clientY / innerHeight - 0.5) * 8);
+    };
+    window.addEventListener("mousemove", handle, { passive: true });
+    return () => window.removeEventListener("mousemove", handle);
+  }, []);
+
+  // Speech recognition setup
+  useEffect(() => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) setVoiceSupported(true);
+  }, []);
+
+  const handleVoice = () => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    if (isListening) {
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+
+    setIsListening(true);
+    recognition.start();
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setAskInput(transcript);
+      setIsListening(false);
+      // Auto-submit after voice
+      setTimeout(() => handleAsk(transcript), 300);
+    };
+
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+  };
+
+  const handleAsk = useCallback(
+    async (queryOverride) => {
+      const query = (queryOverride || askInput).trim();
+      if (!query || isStreaming) return;
+
+      // Special case: resume query
+      const isResumeQuery = /resume|cv|download/i.test(query);
+      if (isResumeQuery) {
+        setHasAsked(true);
+        setAiResponse(
+          `Here is Ahtesham's resume:\n\n**[View Resume](${RESUME_VIEW_URL})**\n\nClick the link above to open it in a new tab.`,
+        );
+        return;
+      }
+
+      setHasAsked(true);
+      setAiResponse("");
+      setIsStreaming(true);
+
+      try {
+        const ctrl = new AbortController();
+        abortRef.current = ctrl;
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            messages: [{ role: "user", content: query }],
+          }),
+          signal: ctrl.signal,
+        });
+
+        if (!response.ok || !response.body) throw new Error("Stream error");
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split("\n\n");
+          buffer = lines.pop() || "";
+
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed.startsWith("data: ")) continue;
+            const data = trimmed.slice(6);
+            if (data === "[DONE]") break;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.chunk) setAiResponse((prev) => prev + parsed.chunk);
+            } catch {}
+          }
+        }
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          const fallbackText = generateClientAIResponse(query);
+          setAiResponse(fallbackText);
+        }
+      } finally {
+        setIsStreaming(false);
+      }
+    },
+    [askInput, isStreaming],
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleAsk();
+  };
+
+  const handleChipClick = (chip) => {
+    setAskInput(chip.query);
+    handleAsk(chip.query);
+  };
+
   return (
     <section
       id='home'
-      className='min-h-screen flex items-center pt-20 overflow-hidden relative'
+      className='min-h-screen flex items-center pt-20 pb-16 overflow-hidden relative'
+      style={{ backgroundColor: "var(--bg-base)" }}
     >
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center'>
-        {/* Left Content */}
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8 }}
-          className='text-left z-10'
-        >
-          <div className='inline-block px-4 py-2 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-400 text-sm font-medium mb-6 backdrop-blur-md'>
-            Available for hire
-          </div>
+      {/* Ambient background gradients */}
+      <div
+        className='absolute top-0 left-0 w-full h-full pointer-events-none'
+        style={{
+          background: `
+            radial-gradient(ellipse 55% 45% at 15% 25%, rgba(124,108,252,0.08) 0%, transparent 65%),
+            radial-gradient(ellipse 40% 40% at 85% 70%, rgba(34,211,238,0.05) 0%, transparent 60%)
+          `,
+        }}
+      />
 
-          <h1 className='text-5xl md:text-7xl font-bold mb-6 leading-tight text-white'>
-            Hi, I'm <br />
-            <span className='text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-green-400'>
-              Mohd Ahtesham
-            </span>
-          </h1>
+      <div className='section-container w-full z-10'>
+        <div className='grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center'>
+          {/* ── LEFT COLUMN ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+            className='lg:col-span-7'
+          >
+            {/* Status badge */}
+            <div className='status-pill mb-6 w-fit'>
+              <span className='w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulseDot' />
+              Available for Full Stack & GenAI Opportunities
+            </div>
 
-          <h2 className='text-xl md:text-2xl text-gray-300 font-light mb-6 min-h-[40px]'>
-            <Typewriter
-              text='Automation Specialist | Full Stack Developer'
-              speed={70}
-            />
-          </h2>
-
-          <p className='text-gray-400 text-lg max-w-lg mb-10 leading-relaxed'>
-            Results-driven developer passionate about crafting scalable web
-            applications and AI-powered solutions. Transforming ideas into
-            clean, efficient code.
-          </p>
-
-          <div className='flex flex-wrap gap-4'>
-            <a
-              href='#projects'
-              className='px-8 py-4 rounded-full bg-primary-blue hover:bg-blue-600 text-white font-bold transition-all hover:scale-105 shadow-[0_0_20px_rgba(0,82,204,0.3)]'
+            {/* Headline */}
+            <h1
+              className='text-3xl sm:text-4xl lg:text-[44px] font-bold leading-[1.18] tracking-tight mb-5'
+              style={{ color: "var(--text-primary)" }}
             >
-              View Projects
-            </a>
-            <a
-              href='https://drive.google.com/file/d/1p4sQy8GNAnO50Pd8PeaUOjfyBZTv-8bM/view?usp=drive_link'
-              className='px-8 py-4 rounded-full bg-transparent border border-brand-teal/50 text-brand-teal hover:bg-brand-teal/10 font-bold flex items-center gap-2 transition-all hover:scale-105'
-            >
-              <Download size={20} /> Download CV
-            </a>
-          </div>
-        </motion.div>
+              Full Stack Developer building{" "}
+              <span style={{ color: "var(--accent-primary)" }}>
+                scalable web applications
+              </span>{" "}
+              and{" "}
+              <span style={{ color: "var(--accent-secondary)" }}>
+                AI-powered products
+              </span>
+              .
+            </h1>
 
-        {/* Right Animation - Orbital System */}
-        <div className='relative h-[600px] w-full flex items-center justify-center perspective-1000'>
-          {/* Background Gradients */}
-          <div className='absolute inset-0 bg-gradient-to-tr from-brand-blue/10 to-transparent rounded-full blur-3xl opacity-30'></div>
-          {/* Central Hub */}
-          <div className='relative z-20 w-32 h-32 rounded-full bg-gradient-to-br from-brand-blue to-brand-teal shadow-[0_0_50px_rgba(0,184,217,0.4)] flex items-center justify-center'>
-            <span className='text-white font-black text-2xl tracking-widest'>
-              DEV
-            </span>
-          </div>
-          {/* Orbits - SVG/Borders */}
-          {/* Orbit 1 */}
-          <div className='absolute rounded-full border border-white/5 w-[280px] h-[280px]'></div>
-          {/* Orbit 2 */}
-          <div className='absolute rounded-full border border-white/5 w-[420px] h-[420px]'></div>
-          {/* Orbit 3 */}
-          <div className='absolute rounded-full border border-white/5 w-[560px] h-[560px]'></div>
-          {/* Floating Icons */}
-          {/* Inner Orbit (Radius ~140px) */}
-          <RotatingIcon
-            icon={Code}
-            radius={140}
-            duration={15}
-            color='text-brand-blue'
-          />
-          <RotatingIcon
-            icon={Brain}
-            radius={140}
-            duration={15}
-            reverse={true}
-            color='text-brand-red'
-          />{" "}
-          {/* Reverse logic needs positioning adjustment if on same orbit, usually we offset angle. Simplified here implies same start angle. */}
-          {/* To properly distribute them, the simplest way without complex math in CSS is rotating the parent container of EACH icon to a starting degree. */}
-          {/* Re-implementing with wrapper for angles */}
-          <div className='absolute inset-0 flex items-center justify-center rotate-0'>
-            <RotatingIcon
-              icon={Code}
-              radius={140}
-              duration={20}
-              color='text-blue-400'
-            />
-          </div>
-          <div className='absolute inset-0 flex items-center justify-center rotate-180'>
-            <RotatingIcon
-              icon={Layout}
-              radius={140}
-              duration={20}
-              color='text-pink-400'
-            />
-          </div>
-          {/* Middle Orbit (Radius ~210px) */}
-          <div className='absolute inset-0 flex items-center justify-center rotate-45'>
-            <RotatingIcon
-              icon={Server}
-              radius={210}
-              duration={25}
-              reverse={true}
-              color='text-green-400'
-            />
-          </div>
-          <div className='absolute inset-0 flex items-center justify-center rotate-135'>
-            <RotatingIcon
-              icon={Database}
-              radius={210}
-              duration={25}
-              reverse={true}
-              color='text-yellow-400'
-            />
-          </div>
-          <div className='absolute inset-0 flex items-center justify-center rotate-225'>
-            <RotatingIcon
-              icon={Globe}
-              radius={210}
-              duration={25}
-              reverse={true}
-              color='text-cyan-400'
-            />
-          </div>
-          {/* Outer Orbit (Radius ~280px) */}
-          <div className='absolute inset-0 flex items-center justify-center rotate-90'>
-            <RotatingIcon
-              icon={Bot}
-              radius={280}
-              duration={30}
-              color='text-purple-400'
-            />
-          </div>
-          <div className='absolute inset-0 flex items-center justify-center rotate-270'>
-            <RotatingIcon
-              icon={Cloud}
-              radius={280}
-              duration={30}
-              color='text-orange-400'
-            />
-          </div>
-          <div className='absolute inset-0 flex items-center justify-center rotate-0'>
-            <RotatingIcon
-              icon={Terminal}
-              radius={280}
-              duration={30}
-              color='text-white'
-            />
-          </div>
+            {/* Supporting text */}
+            <p
+              className='text-sm leading-relaxed max-w-xl mb-8'
+              style={{ color: "var(--text-secondary)" }}
+            >
+              Building modern web applications, APIs, GenAI systems and
+              AI-powered automation using technologies such as MERN, FastAPI and
+              modern LLM tooling.
+            </p>
+
+            {/* ── AI ASK BAR + FULL CHAT ── */}
+            <div className='mb-4'>
+              <form onSubmit={handleSubmit}>
+                <div className='flex flex-col sm:flex-row gap-2.5'>
+                  <div className='ai-ask-bar flex-1'>
+                    <Bot
+                      size={16}
+                      style={{ color: "var(--accent-primary)", flexShrink: 0 }}
+                    />
+                    <input
+                      ref={inputRef}
+                      type='text'
+                      value={askInput}
+                      onChange={(e) => setAskInput(e.target.value)}
+                      placeholder={
+                        isListening
+                          ? "Listening..."
+                          : "Ask about my projects, skills, experience or resume..."
+                      }
+                      disabled={isStreaming}
+                      aria-label='Ask about Ahtesham'
+                    />
+                    {voiceSupported && (
+                      <button
+                        type='button'
+                        onClick={handleVoice}
+                        className='p-2 rounded-full flex-shrink-0 transition-all'
+                        style={{
+                          backgroundColor: isListening
+                            ? "rgba(124,108,252,0.2)"
+                            : "var(--bg-elevated)",
+                          color: isListening
+                            ? "var(--accent-primary)"
+                            : "var(--text-muted)",
+                          border: `1px solid ${isListening ? "rgba(124,108,252,0.35)" : "var(--border-subtle)"}`,
+                        }}
+                        aria-label={
+                          isListening ? "Stop listening" : "Start voice input"
+                        }
+                        title={
+                          isListening ? "Stop listening" : "Use voice input"
+                        }
+                      >
+                        {isListening ? (
+                          <Mic size={14} className='animate-pulseDot' />
+                        ) : (
+                          <Mic size={14} />
+                        )}
+                      </button>
+                    )}
+                    <button
+                      type='submit'
+                      disabled={!askInput.trim() || isStreaming}
+                      className='flex-shrink-0 p-2 rounded-full transition-all'
+                      style={{
+                        backgroundColor:
+                          askInput.trim() && !isStreaming
+                            ? "var(--accent-primary)"
+                            : "var(--bg-elevated)",
+                        color:
+                          askInput.trim() && !isStreaming
+                            ? "#fff"
+                            : "var(--text-muted)",
+                      }}
+                      aria-label='Send question'
+                    >
+                      {isStreaming ? (
+                        <Loader2 size={14} className='animate-spin' />
+                      ) : (
+                        <Send size={14} />
+                      )}
+                    </button>
+                  </div>
+
+                  {/* Full Chat Action Button */}
+                  <button
+                    type='button'
+                    onClick={onOpenAIChat}
+                    className='btn btn-accent text-[11.5px] shrink-0 h-[42px] px-4 rounded-full flex items-center justify-center gap-1.5 shadow-sm'
+                    title='Open Full AI Workspace'
+                  >
+                    <Sparkles size={13} /> Full Chat
+                  </button>
+                </div>
+              </form>
+
+              {/* Suggestion chips */}
+              {!hasAsked && (
+                <div className='flex flex-wrap items-center gap-2 mt-3'>
+                  {SUGGESTION_CHIPS.map((chip) => (
+                    <button
+                      key={chip.label}
+                      onClick={() => handleChipClick(chip)}
+                      className='btn btn-ghost text-[10.5px]'
+                      style={{ padding: "5px 12px", borderRadius: "9999px" }}
+                    >
+                      {chip.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* AI Response */}
+              {hasAsked && (
+                <div
+                  className='mt-4 rounded-xl p-4 text-[12.5px] leading-relaxed animate-fadeIn'
+                  style={{
+                    backgroundColor: "var(--bg-elevated)",
+                    border: "1px solid var(--border-subtle)",
+                    color: "var(--text-secondary)",
+                  }}
+                >
+                  {isStreaming && !aiResponse && (
+                    <div className='typing-indicator'>
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+                  )}
+                  <div style={{ color: "var(--text-secondary)" }}>
+                    {renderMd(aiResponse)}
+                  </div>
+                  {!isStreaming && aiResponse && (
+                    <div
+                      className='mt-3 pt-3 flex items-center gap-3'
+                      style={{ borderTop: "1px solid var(--border-subtle)" }}
+                    >
+                      <button
+                        onClick={() => {
+                          setHasAsked(false);
+                          setAiResponse("");
+                          setAskInput("");
+                        }}
+                        className='text-[10.5px]'
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={onOpenAIChat}
+                        className='btn btn-accent text-[10.5px] ml-auto'
+                        style={{ padding: "5px 12px" }}
+                      >
+                        <Sparkles size={11} /> Full AI Chat
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Quick links */}
+            <div
+              className='flex flex-wrap items-center gap-4 pt-5 mt-2 text-xs'
+              style={{
+                borderTop: "1px solid var(--border-subtle)",
+                color: "var(--text-muted)",
+              }}
+            >
+              <a
+                href={GITHUB_URL}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex items-center gap-1.5 transition-colors hover:text-[var(--text-primary)]'
+                style={{ color: "var(--text-muted)" }}
+              >
+                <Github size={13} /> GitHub
+              </a>
+              <span style={{ color: "var(--border-mid)" }}>·</span>
+              <a
+                href={LINKEDIN_URL}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex items-center gap-1.5 transition-colors'
+                style={{ color: "var(--text-muted)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-muted)")
+                }
+              >
+                <Linkedin size={13} /> LinkedIn
+              </a>
+              <span style={{ color: "var(--border-mid)" }}>·</span>
+              <a
+                href={RESUME_VIEW_URL}
+                target='_blank'
+                rel='noopener noreferrer'
+                className='flex items-center gap-1.5 transition-colors'
+                style={{ color: "var(--text-muted)" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "var(--text-primary)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "var(--text-muted)")
+                }
+              >
+                <FileText size={13} /> Resume
+              </a>
+            </div>
+          </motion.div>
+
+          {/* ── RIGHT COLUMN — AI Workspace Visual ── */}
+          <motion.div
+            className='lg:col-span-5 w-full'
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.55, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            style={{ x: springX, y: springY }}
+          >
+            <AIWorkspacePanel />
+          </motion.div>
         </div>
       </div>
     </section>

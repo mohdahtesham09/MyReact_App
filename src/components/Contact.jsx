@@ -1,202 +1,286 @@
-import React, { useState, useRef } from 'react';
-import { Mail, MapPin, Send, Linkedin, Github, Instagram } from 'lucide-react';
-import emailjs from '@emailjs/browser';
+import React, { useState } from "react";
+import { Mail, MapPin, Send, Linkedin, Github, Instagram, MessageSquare, ArrowRight } from "lucide-react";
+import emailjs from "@emailjs/browser";
+import { CONTACT_EMAIL, GITHUB_URL, LINKEDIN_URL, INSTAGRAM_URL } from "../config";
 
-const Contact = () => {
-    const formRef = useRef();
-    const [loading, setLoading] = useState(false);
-    const [status, setStatus] = useState({ type: '', message: '' });
+const Contact = ({ onOpenAIChat }) => {
+  const [loading, setLoading] = useState(false);
+  const [status, setStatus] = useState({ type: "", message: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
 
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        message: ''
-    });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setStatus({ type: "", message: "" });
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setStatus({ type: '', message: '' });
+    const serviceId = "service_mx64ife";
+    const templateId = "template_jz6f27d";
+    const publicKey = "F3IjEdxdYF8RoEROh";
 
-        // TODO: REPLACE THESE WITH YOUR ACTUAL EMAILJS SERVICE/TEMPLATE/PUBLIC KEYS
-        // Get these from https://www.emailjs.com/
-        const serviceId = 'service_mx64ife';
-        const templateId = 'template_jz6f27d';
-        const publicKey = 'F3IjEdxdYF8RoEROh';
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          to_email: CONTACT_EMAIL,
+        },
+        publicKey
+      );
 
-        if (serviceId === 'service_id_placeholder') {
-            alert("Email Functionality requires setup!\n\nPlease open 'src/components/Contact.jsx' and replace 'service_id_placeholder' (and others) with your actual EmailJS keys.");
-            setLoading(false);
-            return;
-        }
+      try {
+        const googleSheetUrl =
+          "https://script.google.com/macros/s/AKfycbwf8v1FDCrexgG85OkW1n8hhnvrF6gNGQ5TP30vM622xe9PCEVGBhAv5XfyHhDP_VQK/exec";
+        fetch(googleSheetUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+      } catch (err) {}
 
-        try {
-            // 1. Send Email via EmailJS
-            await emailjs.send(serviceId, templateId, {
-                from_name: formData.name,
-                from_email: formData.email,
-                message: formData.message,
-                to_email: 'ahteshammohd094@gmail.com'
-            }, publicKey);
+      setStatus({ type: "success", message: "Message sent successfully! I'll get back to you shortly." });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      setStatus({
+        type: "error",
+        message: `Could not send message. Please email ${CONTACT_EMAIL} directly.`,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            // 2. Save to Google Sheets (Fire and forget from user perspective)
-            try {
-                const googleSheetUrl = 'https://script.google.com/macros/s/AKfycbwf8v1FDCrexgG85OkW1n8hhnvrF6gNGQ5TP30vM622xe9PCEVGBhAv5XfyHhDP_VQK/exec';
-                await fetch(googleSheetUrl, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        name: formData.name,
-                        email: formData.email,
-                        message: formData.message
-                    })
-                });
-            } catch (sheetError) {
-                console.error("Google Sheets Error:", sheetError);
-                // We do NOT set status to error here, so the user sees success from the email
-            }
+  return (
+    <section id="contact" className="py-20" style={{ backgroundColor: "var(--bg-base)" }}>
+      <div className="section-container">
+        {/* Banner CTA */}
+        <div
+          className="card p-8 sm:p-12 text-center mb-12 relative overflow-hidden"
+          style={{
+            backgroundColor: "var(--bg-surface)",
+            border: "1px solid var(--border-mid)",
+          }}
+        >
+          {/* Subtle glow */}
+          <div
+            className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-36 rounded-full blur-[90px] pointer-events-none"
+            style={{ backgroundColor: "var(--accent-primary)", opacity: 0.12 }}
+          />
 
-            setStatus({
-                type: 'success',
-                message: 'Thank you! Your message has been sent successfully.'
-            });
-            setFormData({ name: '', email: '', message: '' });
+          <h2 className="text-2xl sm:text-4xl font-bold mb-3 relative z-10" style={{ color: "var(--text-primary)" }}>
+            Let's build something useful.
+          </h2>
+          <p className="text-sm max-w-md mx-auto mb-8 relative z-10" style={{ color: "var(--text-secondary)" }}>
+            Open for Full Stack Developer roles, GenAI opportunities, and freelance projects.
+          </p>
 
-        } catch (error) {
-            console.error("Email Error:", error);
-            setStatus({
-                type: 'error',
-                message: 'Oops! Failed to send email. Please check your config.'
-            });
-        } finally {
-            setLoading(false);
-        }
-    };
+          <div className="flex flex-wrap items-center justify-center gap-3 relative z-10">
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="btn btn-primary text-xs"
+              style={{ padding: "10px 22px" }}
+            >
+              <Mail size={14} /> Email Me
+            </a>
+            <a
+              href="#contact-form"
+              className="btn btn-secondary text-xs"
+              style={{ padding: "10px 22px" }}
+            >
+              Hire Me <ArrowRight size={14} />
+            </a>
+            <button
+              onClick={onOpenAIChat}
+              className="btn btn-accent text-xs"
+              style={{ padding: "10px 22px" }}
+            >
+              <MessageSquare size={14} /> Ask AI Assistant
+            </button>
+          </div>
+        </div>
 
-    return (
-        <section id="contact" className="py-20 relative text-white">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-16">
-                    Get In Touch
-                </h2>
+        {/* Contact Form & Info Grid */}
+        <div id="contact-form" className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Left Info Panel */}
+          <div className="lg:col-span-5 flex flex-col justify-between card p-6">
+            <div>
+              <p className="section-label mb-1">Direct Contact</p>
+              <h3 className="text-lg font-bold mb-6" style={{ color: "var(--text-primary)" }}>
+                Get In Touch
+              </h3>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                    {/* Contact Info Card */}
-                    <div className="bg-[#1e293b]/50 backdrop-blur-md border border-white/10 rounded-2xl p-8 flex flex-col h-full shadow-lg hover:shadow-2xl transition-all duration-300">
-                        <h3 className="text-2xl font-bold mb-6">Let's Connect</h3>
-                        <p className="text-gray-400 mb-10 leading-relaxed font-light">
-                            I'm currently looking for new opportunities in Full-Stack Development and AI.
-                            Whether you have a question or just want to say hi, I'll try my best to get back to you!
-                        </p>
-
-                        <div className="space-y-8">
-                            <div className="flex items-start space-x-4">
-                                <div className="p-3 bg-transparent border border-white/20 rounded-xl text-white">
-                                    <Mail size={24} />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-500 mb-1">Email Me</p>
-                                    <a href="mailto:ahteshammohd094@gmail.com" className="text-white hover:text-brand-blue transition-colors font-medium">ahteshammohd094@gmail.com</a>
-                                </div>
-                            </div>
-
-                            <div className="flex items-start space-x-4">
-                                <div className="p-3 bg-transparent border border-white/20 rounded-xl text-brand-teal">
-                                    <MapPin size={24} className="text-white" />
-                                </div>
-                                <div>
-                                    <p className="text-sm text-gray-500 mb-1">Location</p>
-                                    <p className="text-white font-medium">Gonda, Uttar Pradesh, India</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-auto pt-10">
-                            <h4 className="text-white font-bold mb-4">Follow Me</h4>
-                            <div className="flex space-x-4">
-                                <a href="https://linkedin.com/in/ahteshammohd094/" target="_blank" rel="noopener noreferrer" className="p-3 bg-[#334155] rounded-xl text-white hover:bg-brand-blue hover:scale-110 transition-all">
-                                    <Linkedin size={20} />
-                                </a>
-                                <a href="https://github.com/mohdahtesham09" target="_blank" rel="noopener noreferrer" className="p-3 bg-[#334155] rounded-xl text-white hover:bg-black hover:scale-110 transition-all">
-                                    <Github size={20} />
-                                </a>
-                                <a href="https://instagram.com/fsd.ahtesham/" target="_blank" rel="noopener noreferrer" className="p-3 bg-[#334155] rounded-xl text-white hover:bg-brand-red hover:scale-110 transition-all">
-                                    <Instagram size={20} />
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Contact Form Card */}
-                    <div className="bg-[#1e293b]/50 backdrop-blur-md border border-white/10 rounded-2xl p-8 md:p-10 shadow-lg hover:shadow-2xl transition-all duration-300">
-                        <h3 className="text-2xl font-bold mb-8">Send a Message</h3>
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-bold text-gray-400 mb-2">Your Name</label>
-                                <input
-                                    type="text"
-                                    id="name"
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleChange}
-                                    className="w-full bg-[#334155]/50 border border-transparent focus:border-brand-blue rounded-lg px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-brand-blue transition-all"
-                                    placeholder="John Doe"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-bold text-gray-400 mb-2">Your Email</label>
-                                <input
-                                    type="email"
-                                    id="email"
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className="w-full bg-[#334155]/50 border border-transparent focus:border-brand-blue rounded-lg px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-brand-blue transition-all"
-                                    placeholder="john@example.com"
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <label htmlFor="message" className="block text-sm font-bold text-gray-400 mb-2">Message</label>
-                                <textarea
-                                    id="message"
-                                    name="message"
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    rows="5"
-                                    className="w-full bg-[#334155]/50 border border-transparent focus:border-brand-blue rounded-lg px-4 py-4 text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-brand-blue transition-all resize-none"
-                                    placeholder="Project details..."
-                                    required
-                                ></textarea>
-                            </div>
-
-                            {status.message && (
-                                <div className={`p-4 rounded-lg text-sm ${status.type === 'success' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
-                                    {status.message}
-                                </div>
-                            )}
-
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold py-4 rounded-lg shadow-lg hover:shadow-blue-500/25 transition-all transform active:scale-95 flex justify-center items-center gap-2"
-                            >
-                                {loading ? 'Sending...' : 'Send Message'}
-                                {!loading && <Send size={20} className="ml-1" />}
-                            </button>
-                        </form>
-                    </div>
+              <div className="space-y-5">
+                <div className="flex items-center gap-3.5">
+                  <div
+                    className="p-3 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      backgroundColor: "rgba(34,211,238,0.12)",
+                      border: "1px solid rgba(34,211,238,0.25)",
+                      color: "var(--accent-secondary)",
+                    }}
+                  >
+                    <Mail size={16} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--text-muted)" }}>
+                      Email
+                    </p>
+                    <a
+                      href={`mailto:${CONTACT_EMAIL}`}
+                      className="text-sm font-semibold transition-colors"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {CONTACT_EMAIL}
+                    </a>
+                  </div>
                 </div>
+
+                <div className="flex items-center gap-3.5">
+                  <div
+                    className="p-3 rounded-xl flex items-center justify-center shrink-0"
+                    style={{
+                      backgroundColor: "rgba(124,108,252,0.12)",
+                      border: "1px solid rgba(124,108,252,0.25)",
+                      color: "var(--accent-primary)",
+                    }}
+                  >
+                    <MapPin size={16} />
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--text-muted)" }}>
+                      Location
+                    </p>
+                    <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>
+                      Gonda, Uttar Pradesh, India
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-        </section>
-    );
+
+            {/* Socials */}
+            <div className="pt-6 mt-8 border-t flex items-center gap-3" style={{ borderColor: "var(--border-subtle)" }}>
+              {[
+                { href: GITHUB_URL, Icon: Github, label: "GitHub" },
+                { href: LINKEDIN_URL, Icon: Linkedin, label: "LinkedIn" },
+                { href: INSTAGRAM_URL, Icon: Instagram, label: "Instagram" },
+              ].map(({ href, Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 rounded-xl transition-all"
+                  style={{
+                    backgroundColor: "var(--bg-elevated)",
+                    border: "1px solid var(--border-subtle)",
+                    color: "var(--text-secondary)",
+                  }}
+                  title={label}
+                >
+                  <Icon size={16} />
+                </a>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Contact Form */}
+          <div className="lg:col-span-7 card p-6 sm:p-8">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-[11px] font-semibold uppercase tracking-wider mb-1.5"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="input-field"
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-[11px] font-semibold uppercase tracking-wider mb-1.5"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="input-field"
+                  placeholder="you@company.com"
+                  required
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block text-[11px] font-semibold uppercase tracking-wider mb-1.5"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows={4}
+                  className="input-field resize-none"
+                  placeholder="Tell me about your project or opportunity..."
+                  required
+                />
+              </div>
+
+              {status.message && (
+                <div
+                  className="p-3 rounded-xl text-xs font-medium"
+                  style={{
+                    backgroundColor:
+                      status.type === "success" ? "rgba(52,211,153,0.12)" : "rgba(248,113,113,0.12)",
+                    color: status.type === "success" ? "#34D399" : "#F87171",
+                    border: `1px solid ${status.type === "success" ? "rgba(52,211,153,0.25)" : "rgba(248,113,113,0.25)"}`,
+                  }}
+                >
+                  {status.message}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="btn btn-primary w-full py-3 text-xs"
+              >
+                {loading ? "Sending Message..." : "Send Message"}
+                {!loading && <Send size={14} />}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
 };
 
 export default Contact;

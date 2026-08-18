@@ -1,0 +1,274 @@
+// ============================================================
+//  PORTFOLIO MASTER DATA — Single Source of Truth
+//  Powers Portfolio UI, Admin Config, and AI Knowledge Engine
+// ============================================================
+
+export const personalInfo = {
+  name: "Mohd Ahtesham",
+  title: "Full Stack Developer · AI Applications & Automation",
+  bio: "I’m a BCA graduate and Full Stack Developer specializing in MERN and AI-powered applications. I build scalable web apps and AI solutions using React, Node.js, MongoDB, Docker, AWS, LangChain, LangGraph, RAG and n8n. My projects include multi-agent AI platforms, MERN applications and AI automation workflows. Open to Full Stack, Backend, Software Engineer and AI Application Developer roles.",
+  email: "fsdahtesham@gmail.com",
+  linkedin: "https://www.linkedin.com/in/ahteshammohd094/",
+  github: "https://github.com/mohdahtesham09",
+  instagram: "https://instagram.com/fsd.ahtesham/",
+  location: "Gonda, Uttar Pradesh, India",
+  availability: "Available for Full-Time Roles & Freelance Projects",
+  degree: "BCA (Bachelor of Computer Applications)",
+  institution: "Meena Saha Institute of Technology & Management",
+};
+
+export const resumeConfig = {
+  resumeViewUrl: "https://drive.google.com/file/d/1GSbzaLSAi-FO-MsoQA516f76JO-P6Pvl/view",
+  resumePdfUrl: "/resume.pdf",
+};
+
+export const careerDirection = {
+  targetRoles: [
+    "Full Stack Developer",
+    "Backend Developer",
+    "Software Engineer",
+    "AI Application Developer",
+  ],
+  progression: [
+    "Full Stack",
+    "Backend / Production Engineering",
+    "AI Applications",
+    "GenAI / AI Engineering",
+  ],
+  longTermGoal: "Building reliable, scalable AI systems, multi-agent architectures, and production GenAI applications.",
+};
+
+export const journeyPath = [
+  "BCA",
+  "Full Stack",
+  "Backend",
+  "GenAI",
+  "AI Automation",
+];
+
+export const skillsGrouped = [
+  {
+    category: "Frontend",
+    color: "var(--accent-secondary)",
+    skills: [
+      "React.js",
+      "JavaScript",
+      "TypeScript",
+      "HTML5",
+      "CSS3",
+      "Tailwind CSS",
+      "Redux Toolkit",
+      "Frontend State Management",
+    ],
+  },
+  {
+    category: "Backend",
+    color: "#34D399",
+    skills: [
+      "Node.js",
+      "Express.js",
+      "FastAPI",
+      "REST APIs",
+      "Backend Middleware",
+      "JWT Authentication",
+      "Schemas",
+    ],
+  },
+  {
+    category: "Databases & Caching",
+    color: "var(--accent-warm)",
+    skills: ["MongoDB", "Redis"],
+  },
+  {
+    category: "AI / GenAI",
+    color: "var(--accent-primary)",
+    skills: [
+      "LLM",
+      "LangChain",
+      "LangGraph",
+      "RAG",
+      "Multi-Agent Systems",
+      "AI",
+    ],
+  },
+  {
+    category: "Automation",
+    color: "#FB923C",
+    skills: ["n8n", "Appointment Booking Automation"],
+  },
+  {
+    category: "Cloud / DevOps",
+    color: "#60A5FA",
+    skills: [
+      "Docker",
+      "AWS",
+      "AWS ECS Fargate",
+      "ECR",
+      "ALB",
+      "CloudFront",
+      "GitHub Actions",
+      "CI/CD",
+      "ECS",
+      "Nginx",
+    ],
+  },
+  {
+    category: "Programming & Tools",
+    color: "#94A3B8",
+    skills: [
+      "Python",
+      "C++",
+      "GitHub",
+      "Postman",
+      "Autocannon",
+      "Firebase Authentication",
+      "Software Engineering",
+      "Programming",
+    ],
+  },
+];
+
+export const roadmapStages = [
+  {
+    step: "01",
+    title: "Full Stack Foundation",
+    tag: "Current Strength",
+    tech: ["MERN", "React", "Node.js", "Express.js", "MongoDB", "REST APIs", "JWT", "Redux Toolkit", "Tailwind CSS"],
+    desc: "Building complete web applications from frontend to backend with authentication, APIs, databases and state management.",
+    color: "var(--accent-secondary)",
+    status: "active",
+  },
+  {
+    step: "02",
+    title: "Backend & Production Engineering",
+    tag: "What I Bring to a Team",
+    tech: ["FastAPI", "Redis", "Docker", "Nginx", "AWS", "ECS Fargate", "ECR", "ALB", "CloudFront", "GitHub Actions", "CI/CD"],
+    desc: "Building production-oriented backend systems, APIs, containerized applications and deployment workflows.",
+    color: "#34D399",
+    status: "active",
+  },
+  {
+    step: "03",
+    title: "AI Application Engineering",
+    tag: "Current Direction",
+    tech: ["LLMs", "LangChain", "LangGraph", "RAG", "Multi-Agent Systems", "AI Automation"],
+    desc: "Building practical AI applications that connect LLMs with real software, data and business workflows.",
+    color: "var(--accent-primary)",
+    status: "active",
+  },
+  {
+    step: "04",
+    title: "GenAI / AI Engineer",
+    tag: "Next Career Direction",
+    tech: ["AI Engineering", "Advanced Agentic AI", "Production GenAI Systems"],
+    desc: "Moving toward building reliable, scalable AI systems and intelligent applications that create measurable business value.",
+    color: "var(--accent-warm)",
+    status: "destination",
+  },
+];
+
+export const valueProps = [
+  {
+    title: "Full Stack Ownership",
+    subtitle: "Frontend, Backend, APIs & DB",
+    desc: "Can work across frontend, backend, APIs and databases to build end-to-end features.",
+    color: "var(--accent-secondary)",
+  },
+  {
+    title: "Backend Engineering",
+    subtitle: "Production Systems & Middleware",
+    desc: "Can build REST APIs, middleware, authentication, caching and production-oriented backend systems.",
+    color: "#34D399",
+  },
+  {
+    title: "AI Application Development",
+    subtitle: "LLMs, RAG & AI Agents",
+    desc: "Can integrate LLMs, RAG, LangChain/LangGraph and AI agents into real applications.",
+    color: "var(--accent-primary)",
+  },
+  {
+    title: "Automation & Deployment",
+    subtitle: "Workflows, Docker & Cloud",
+    desc: "Can build AI workflows and work with Docker, AWS and CI/CD pipelines.",
+    color: "var(--accent-warm)",
+  },
+];
+
+export const projects = [
+  {
+    id: "atomic-ai",
+    name: "Atomic AI",
+    tagline: "Full-Stack AI Application & Knowledge Assistant",
+    desc: "Full-stack AI platform with Groq LLM integration, RAG architecture, and intelligent workflow automation.",
+    description: "An AI-powered full-stack application demonstrating Groq API integrations, RAG architecture, and intelligent workflow automation in a scalable MERN environment.",
+    tech: ["React", "Node.js", "Express", "Groq API", "RAG", "LangChain"],
+    technologies: ["React", "Node.js", "Express", "Groq API", "RAG", "LangChain"],
+    role: "Full Stack & AI Developer",
+    category: "AI & Automation",
+    live: "#",
+    github: "https://github.com/mohdahtesham09",
+    image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&auto=format&fit=crop&q=80",
+    featured: true,
+    problem: "Complex user queries required fast context retrieval and accurate AI response synthesis.",
+    solution: "Engineered a high-performance full-stack web system integrating Groq LLM endpoints, structured prompts, and responsive React state management.",
+    features: ["Sub-second AI response latency", "RAG context retrieval", "Full-stack state sync", "Responsive React UI"],
+    metrics: "Sub-second AI response latency with seamless full-stack state synchronization.",
+  },
+  {
+    id: "mediastack",
+    name: "MediaStack",
+    tagline: "Multi-User Content & Blogging Platform",
+    desc: "Feature-rich blogging platform with multi-user auth, dashboard analytics, and RESTful API architecture.",
+    description: "A feature-rich blogging application enabling creators to publish, manage, and curate articles with user authentication, dashboard analytics, and RESTful API architecture.",
+    tech: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+    technologies: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
+    role: "Full Stack Developer",
+    category: "Full Stack",
+    live: "https://mediastack.in",
+    github: "https://github.com/mohdahtesham09",
+    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=80",
+    featured: true,
+    problem: "Creators needed an intuitive, fast content management platform with role-based access controls.",
+    solution: "Developed a full-stack MERN application with modular Express routes, JWT auth, and a responsive React UI.",
+    features: ["Multi-user content creation", "Role-based access", "Dashboard analytics", "RESTful API architecture"],
+    metrics: "Built modular architecture supporting multi-user content creation with sub-100ms API response times.",
+  },
+  {
+    id: "smailyzo",
+    name: "SmailyZo",
+    tagline: "AI Voice & Chat Booking Engine for Dental Clinics",
+    desc: "AI appointment system combining Vapi voice AI and n8n automation to handle calls and sync calendars.",
+    description: "Intelligent dental appointment scheduling system utilizing Vapi voice AI agents and n8n workflow automation to log calls and update schedules automatically.",
+    tech: ["TypeScript", "React", "Vapi Voice AI", "n8n Workflows", "Groq API"],
+    technologies: ["TypeScript", "React", "Vapi Voice AI", "n8n Workflows", "Groq API"],
+    role: "Full Stack & AI Automation Developer",
+    category: "AI & Automation",
+    live: "#",
+    github: "https://github.com/mohdahtesham09",
+    image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80",
+    featured: true,
+    problem: "Dental clinics lose potential patients due to delayed phone handling and manual appointment entry.",
+    solution: "Integrated Vapi voice AI and n8n webhooks with a React frontend to automate instant caller qualification and CRM calendar sync.",
+    features: ["AI voice agents", "Automated call logging", "CRM calendar sync", "Instant caller qualification"],
+    metrics: "Automated 80%+ of routine appointment inquiries with real-time AI conversation and CRM logging.",
+  },
+  {
+    id: "backend-ledger",
+    name: "FastAPI Backend System",
+    tagline: "Secure Transaction & Account Management API",
+    desc: "Financial ledger backend with strict transactional integrity, role authorization, and MongoDB validation.",
+    description: "Financial ledger backend system implementing strict transactional integrity, role authorization, and MongoDB data validation.",
+    tech: ["FastAPI", "Node.js", "Express", "MongoDB", "REST API", "JWT"],
+    technologies: ["FastAPI", "Node.js", "Express", "MongoDB", "REST API", "JWT"],
+    role: "Backend Developer",
+    category: "Backend",
+    live: "#",
+    github: "https://github.com/mohdahtesham09",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80",
+    featured: true,
+    problem: "Managing financial records accurately requires robust backend validation and atomic transaction operations.",
+    solution: "Engineered scalable REST APIs with MVC architecture, JWT auth middleware, and comprehensive schema validation.",
+    features: ["FastAPI REST APIs", "JWT auth", "Schema validation", "Audit trail"],
+    metrics: "Designed zero-loss financial audit trail endpoints following strict MVC security patterns.",
+  },
+];

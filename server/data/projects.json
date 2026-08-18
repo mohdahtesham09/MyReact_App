@@ -1,0 +1,146 @@
+[
+  {
+    "id": "mediastack",
+    "name": "MediaStack",
+    "slug": "mediastack",
+    "tagline": "Multi-User Content & Blogging Platform",
+    "description": "Multi-user blogging platform where creators can publish, manage, and edit content from a personal dashboard with role-based authentication and scalable REST API architecture.",
+    "problem": "Content creators often deal with cumbersome CMS tools that lack fast live previews, clean dashboard statistics, and straightforward role authorization.",
+    "solution": "Built a high-performance MERN blogging application featuring JWT authentication, rich text publishing capabilities, and an optimized RESTful API design.",
+    "features": [
+      "JWT-based user authentication & authorization",
+      "Interactive creator dashboard for article publishing and editing",
+      "Category and tag-based article filtering",
+      "Responsive glassmorphism UI built with React and Tailwind CSS"
+    ],
+    "technologies": ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS", "JWT"],
+    "category": "Full Stack",
+    "role": "Full Stack Developer",
+    "github": "https://github.com/mohdahtesham09",
+    "live": "https://mediastack.in",
+    "image": "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=80"
+    ],
+    "architecture": "Client-Server architecture with React frontend communicating with Node.js/Express REST API endpoints, backed by MongoDB Mongoose schemas.",
+    "metrics": "Sub-100ms API responses and clean modular state management across dynamic routes.",
+    "featured": true,
+    "published": true,
+    "order": 1
+  },
+  {
+    "id": "backend-ledger",
+    "name": "Backend-Ledger",
+    "slug": "backend-ledger",
+    "tagline": "Secure Transaction & Account Management API",
+    "description": "Secure backend ledger system for managing transactions, user accounts, and financial records following MVC architecture and strict security controls.",
+    "problem": "Handling digital ledger entries requires zero data loss, strict transactional boundaries, and multi-step input validation to prevent unauthorized record manipulation.",
+    "solution": "Designed a robust Node.js and Express backend implementing password hashing, structured error handling, JWT payload validation, and MongoDB atomic updates.",
+    "features": [
+      "Atomic ledger transaction endpoints",
+      "JWT payload encryption and role-based route middleware",
+      "Comprehensive request payload validation and error logging",
+      "Modular MVC code layout for scalable maintainability"
+    ],
+    "technologies": ["Node.js", "Express", "MongoDB", "REST API", "JWT", "Bcrypt"],
+    "category": "Backend",
+    "role": "Backend Developer",
+    "github": "https://github.com/mohdahtesham09",
+    "live": "#",
+    "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80"
+    ],
+    "architecture": "MVC backend structure built on Express.js with custom validation middleware, MongoDB database connection, and JSON response normalization.",
+    "metrics": "100% data verification compliance across simulated high-concurrency transaction bursts.",
+    "featured": true,
+    "published": true,
+    "order": 2
+  },
+  {
+    "id": "smailyzo",
+    "name": "SmailyZo – AI Appointment System",
+    "slug": "smailyzo",
+    "tagline": "AI Voice & Chat Booking Engine for Dental Clinics",
+    "description": "AI-powered appointment booking system for dental clinics featuring real-time conversational voice handling with Vapi AI and automated scheduling workflows via n8n.",
+    "problem": "Dental clinics lose inquiries during off-hours or busy front-desk hours, resulting in missed appointments and slow patient follow-ups.",
+    "solution": "Created an automated AI agent system combining Vapi voice AI and n8n webhooks to qualify patient requests, parse appointment details, and update clinic calendars instantly.",
+    "features": [
+      "Conversational voice AI agent powered by Vapi",
+      "n8n automated workflow engine for calendar & CRM logging",
+      "Real-time patient qualification and transcript recording",
+      "React dashboard for appointment overview and agent analytics"
+    ],
+    "technologies": ["TypeScript", "React", "Vapi Voice AI", "n8n Workflows", "Groq API", "Tailwind CSS"],
+    "category": "AI & Automation",
+    "role": "Full Stack & AI Automation Developer",
+    "github": "https://github.com/mohdahtesham09",
+    "live": "#",
+    "image": "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800&auto=format&fit=crop&q=80"
+    ],
+    "architecture": "Vapi AI Voice Pipeline triggering n8n Webhook workflows, which process patient intents and communicate with a React dashboard.",
+    "metrics": "80%+ reduction in manual booking response times for clinical trial workflows.",
+    "featured": true,
+    "published": true,
+    "order": 3
+  },
+  {
+    "id": "atomic-ai",
+    "name": "Atomic AI",
+    "slug": "atomic-ai",
+    "tagline": "Full-Stack AI Application & Knowledge Assistant",
+    "description": "An AI-powered full-stack application demonstrating Groq API integrations, RAG architecture, and intelligent workflow automation in a scalable MERN environment.",
+    "problem": "Complex user queries required fast context retrieval, multi-turn state preservation, and reliable AI response synthesis.",
+    "solution": "Engineered a high-performance full-stack web application integrating Groq LLM endpoints, vector-based RAG pipeline, and a responsive React UI.",
+    "features": [
+      "Groq API integration for sub-second LLM inference",
+      "RAG context retrieval pipeline for verified knowledge answering",
+      "Interactive React interface with live response streaming",
+      "Node.js backend proxy with rate-limiting and prompt security"
+    ],
+    "technologies": ["React", "Node.js", "Express", "Groq API", "RAG", "Tailwind CSS"],
+    "category": "AI & Automation",
+    "role": "Full Stack & AI Developer",
+    "github": "https://github.com/mohdahtesham09",
+    "live": "#",
+    "image": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=80"
+    ],
+    "architecture": "MERN Stack connected to Groq Cloud LLM API and RAG vector store for instant, context-aware responses.",
+    "metrics": "Sub-second AI response latency with seamless full-stack state synchronization.",
+    "featured": true,
+    "published": true,
+    "order": 4
+  },
+  {
+    "id": "goldman-sachs-cyber",
+    "name": "Goldman Sachs Cybersecurity",
+    "slug": "goldman-sachs-cybersecurity",
+    "tagline": "Enterprise Security Simulation & Cryptography",
+    "description": "Virtual internship program simulating enterprise cybersecurity protocols, password hash security, and cryptographic implementation.",
+    "problem": "Modern enterprise applications face complex cybersecurity threats requiring rigorous encryption standards and vulnerability prevention.",
+    "solution": "Analyzed password storage algorithms, cracked weakness patterns in outdated hash methods, and implemented Java cryptographic safeguards.",
+    "features": [
+      "Password cracking simulation and strength analysis",
+      "Implementation of cryptographic primitives in Java",
+      "Vulnerability assessment reports for enterprise architecture"
+    ],
+    "technologies": ["Java", "Cryptography", "Security Protocols", "Vulnerability Analysis"],
+    "category": "Cybersecurity",
+    "role": "Virtual Intern",
+    "github": "https://github.com/mohdahtesham09",
+    "live": "#",
+    "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80",
+    "screenshots": [
+      "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&auto=format&fit=crop&q=80"
+    ],
+    "architecture": "Java cryptographic module execution simulating multi-factor authentication and secure data transmission.",
+    "metrics": "Completed simulation modules certified by Goldman Sachs software security engineering track.",
+    "featured": false,
+    "published": true,
+    "order": 4
+  }
+]
