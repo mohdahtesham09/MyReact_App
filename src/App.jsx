@@ -5,10 +5,10 @@ import RecruiterSnapshot from "./components/RecruiterSnapshot";
 import About from "./components/About";
 import Skills from "./components/Skills";
 import Projects from "./components/Projects";
+import AllProjectsPage from "./components/AllProjectsPage";
 import EngineeringApproach from "./components/EngineeringApproach";
 import EngineeringGrowthRoadmap from "./components/EngineeringGrowthRoadmap";
 import FreelanceServices from "./components/FreelanceServices";
-import VibeCoding from "./components/VibeCoding";
 import Experience from "./components/Experience";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
@@ -21,6 +21,7 @@ import AdminLoginModal from "./components/Admin/AdminLoginModal";
 import AdminDashboard from "./components/Admin/AdminDashboard";
 
 function App() {
+  const [currentView, setCurrentView] = useState("home"); // "home" | "projects"
   const [isAIChatOpen, setIsAIChatOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
@@ -31,7 +32,6 @@ function App() {
   const getInitialTheme = () => {
     const stored = localStorage.getItem("portfolio_theme");
     if (stored === "dark" || stored === "light") return stored;
-    // Respect system preference on first visit
     if (window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
     return "dark";
   };
@@ -84,13 +84,18 @@ function App() {
 
     reveals.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, []);
+  }, [currentView]);
+
+  const handleNavigateToHome = () => {
+    setCurrentView("home");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div
       data-theme={theme}
       style={{ backgroundColor: "var(--bg-base)", color: "var(--text-primary)" }}
-      className="font-sans antialiased"
+      className="font-sans antialiased min-h-screen flex flex-col"
     >
       <Navbar
         onOpenAIChat={() => setIsAIChatOpen(true)}
@@ -99,19 +104,35 @@ function App() {
         onOpenAdminDashboard={() => setIsAdminDashboardOpen(true)}
         theme={theme}
         toggleTheme={toggleTheme}
+        onNavigateHome={handleNavigateToHome}
       />
 
-      <main className="relative">
-        <Hero onOpenAIChat={() => setIsAIChatOpen(true)} />
-        <RecruiterSnapshot onOpenAIChat={() => setIsAIChatOpen(true)} />
-        <About />
-        <Skills />
-        <Projects onSelectProject={(project) => setSelectedProject(project)} />
-        <EngineeringApproach />
-        <EngineeringGrowthRoadmap />
-        <FreelanceServices onOpenAIChat={() => setIsAIChatOpen(true)} />
-        <Experience />
-        <Contact onOpenAIChat={() => setIsAIChatOpen(true)} />
+      <main className="relative flex-1">
+        {currentView === "home" ? (
+          <>
+            <Hero onOpenAIChat={() => setIsAIChatOpen(true)} />
+            <RecruiterSnapshot onOpenAIChat={() => setIsAIChatOpen(true)} />
+            <About />
+            <Skills />
+            <Projects
+              onSelectProject={(project) => setSelectedProject(project)}
+              onNavigateToProjects={() => {
+                setCurrentView("projects");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            />
+            <EngineeringApproach />
+            <EngineeringGrowthRoadmap />
+            <FreelanceServices onOpenAIChat={() => setIsAIChatOpen(true)} />
+            <Experience />
+            <Contact onOpenAIChat={() => setIsAIChatOpen(true)} />
+          </>
+        ) : (
+          <AllProjectsPage
+            onBack={handleNavigateToHome}
+            onSelectProject={(project) => setSelectedProject(project)}
+          />
+        )}
       </main>
 
       <Footer

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ExternalLink, Github, ArrowRight, Zap } from "lucide-react";
+import { ExternalLink, Github, ArrowRight, Layers } from "lucide-react";
 
 const defaultProjects = [
   {
@@ -11,7 +11,8 @@ const defaultProjects = [
     tech: ["React", "Node.js", "Express", "Groq API", "RAG"],
     technologies: ["React", "Node.js", "Express", "Groq API", "RAG"],
     role: "Full Stack & AI Developer",
-    category: "AI & Automation",
+    category: "GenAI Engineering",
+    pinned: true,
     live: "#",
     github: "https://github.com/mohdahtesham09",
     image: "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&auto=format&fit=crop&q=80",
@@ -30,7 +31,8 @@ const defaultProjects = [
     tech: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
     technologies: ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS"],
     role: "Full Stack Developer",
-    category: "Full Stack",
+    category: "MERN Full Stack",
+    pinned: true,
     live: "https://mediastack.in",
     github: "https://github.com/mohdahtesham09",
     image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=800&auto=format&fit=crop&q=80",
@@ -49,7 +51,8 @@ const defaultProjects = [
     tech: ["TypeScript", "React", "Vapi Voice AI", "n8n Workflows", "Groq API"],
     technologies: ["TypeScript", "React", "Vapi Voice AI", "n8n Workflows", "Groq API"],
     role: "Full Stack & AI Automation Developer",
-    category: "AI & Automation",
+    category: "n8n Automation",
+    pinned: true,
     live: "#",
     github: "https://github.com/mohdahtesham09",
     image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80",
@@ -68,7 +71,8 @@ const defaultProjects = [
     tech: ["Node.js", "Express", "MongoDB", "REST API", "JWT"],
     technologies: ["Node.js", "Express", "MongoDB", "REST API", "JWT"],
     role: "Backend Developer",
-    category: "Backend",
+    category: "Python Full Stack",
+    pinned: true,
     live: "#",
     github: "https://github.com/mohdahtesham09",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&auto=format&fit=crop&q=80",
@@ -81,12 +85,16 @@ const defaultProjects = [
 ];
 
 const categoryColors = {
-  "AI & Automation": { bg: "rgba(124,108,252,0.12)", color: "var(--accent-primary)", border: "rgba(124,108,252,0.25)" },
-  "Full Stack":      { bg: "rgba(34,211,238,0.10)",  color: "var(--accent-secondary)", border: "rgba(34,211,238,0.25)" },
-  "Backend":         { bg: "rgba(52,211,153,0.10)",  color: "#34D399",  border: "rgba(52,211,153,0.25)" },
+  "MERN Full Stack":    { bg: "rgba(34,211,238,0.10)",  color: "var(--accent-secondary)", border: "rgba(34,211,238,0.25)" },
+  "Python Full Stack":  { bg: "rgba(52,211,153,0.10)",  color: "#34D399",                 border: "rgba(52,211,153,0.25)" },
+  "AI Engineering":     { bg: "rgba(124,108,252,0.12)", color: "var(--accent-primary)", border: "rgba(124,108,252,0.25)" },
+  "GenAI Engineering":  { bg: "rgba(244,63,94,0.12)",  color: "#F43F5E",                 border: "rgba(244,63,94,0.25)" },
+  "n8n Automation":     { bg: "rgba(251,146,60,0.12)", color: "#FB923C",                 border: "rgba(251,146,60,0.25)" },
 };
 
-const Projects = ({ onSelectProject }) => {
+const defaultCategoryStyle = { bg: "rgba(124,108,252,0.12)", color: "var(--accent-primary)", border: "rgba(124,108,252,0.25)" };
+
+const Projects = ({ onSelectProject, onNavigateToProjects }) => {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const sectionRef = useRef(null);
@@ -117,6 +125,10 @@ const Projects = ({ onSelectProject }) => {
     load();
   }, []);
 
+  // Filter ONLY pinned projects for the homepage section (max 4)
+  const pinnedProjects = projects.filter((p) => p.pinned !== false && p.published !== false);
+  const displayedProjects = pinnedProjects.slice(0, 4);
+
   return (
     <section id="projects" className="py-20" style={{ backgroundColor: "var(--bg-base)" }} ref={sectionRef}>
       <div className="section-container">
@@ -129,13 +141,13 @@ const Projects = ({ onSelectProject }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {projects.slice(0, 4).map((project, idx) => {
+          {displayedProjects.map((project, idx) => {
             const name = project.name || project.title;
             const tagline = project.tagline;
             const desc = project.desc || project.description;
             const tech = project.technologies || project.tech || [];
-            const cat = project.category || "Full Stack";
-            const catStyle = categoryColors[cat] || categoryColors["Full Stack"];
+            const cat = project.category || "MERN Full Stack";
+            const catStyle = categoryColors[cat] || defaultCategoryStyle;
 
             return (
               <div
@@ -232,6 +244,23 @@ const Projects = ({ onSelectProject }) => {
               </div>
             );
           })}
+        </div>
+
+        {/* More Projects Button */}
+        <div className="mt-12 text-center reveal">
+          <button
+            onClick={onNavigateToProjects}
+            className="btn btn-outline text-xs inline-flex items-center gap-2 group px-6 py-3 rounded-full font-semibold shadow-sm transition-all hover:scale-105"
+            style={{
+              borderColor: "var(--border-subtle)",
+              backgroundColor: "var(--bg-elevated)",
+              color: "var(--text-primary)"
+            }}
+          >
+            <Layers size={14} className="text-accent" />
+            <span>More Projects</span>
+            <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
       </div>
     </section>

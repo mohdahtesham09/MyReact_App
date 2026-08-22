@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  X, Plus, Edit, Trash2, Eye, EyeOff, Star, ArrowUp, ArrowDown, Upload, Check, AlertCircle, RefreshCw, LogOut, Image as ImageIcon, FileText, Link as LinkIcon
+  X, Plus, Edit, Trash2, Eye, EyeOff, Star, ArrowUp, ArrowDown, Upload, Check, AlertCircle, RefreshCw, LogOut, Image as ImageIcon, FileText, Link as LinkIcon, Pin
 } from "lucide-react";
 import { RESUME_VIEW_URL } from "../../config";
 
@@ -39,7 +39,7 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
     solution: "",
     featuresText: "",
     techText: "",
-    category: "Full Stack",
+    category: "MERN Full Stack",
     role: "Full Stack Developer",
     github: "https://github.com/mohdahtesham09",
     live: "#",
@@ -48,7 +48,8 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
     architecture: "",
     metrics: "",
     featured: false,
-    published: true
+    published: true,
+    pinned: true
   });
 
   const fetchAdminProjects = async () => {
@@ -115,7 +116,7 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
       solution: "",
       featuresText: "",
       techText: "",
-      category: "Full Stack",
+      category: "MERN Full Stack",
       role: "Full Stack Developer",
       github: "https://github.com/mohdahtesham09",
       live: "#",
@@ -124,7 +125,8 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
       architecture: "",
       metrics: "",
       featured: false,
-      published: true
+      published: true,
+      pinned: true
     });
     setShowFormModal(true);
   };
@@ -140,7 +142,7 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
       solution: proj.solution || "",
       featuresText: Array.isArray(proj.features) ? proj.features.join(", ") : "",
       techText: Array.isArray(proj.technologies) ? proj.technologies.join(", ") : (Array.isArray(proj.tech) ? proj.tech.join(", ") : ""),
-      category: proj.category || "Full Stack",
+      category: proj.category || "MERN Full Stack",
       role: proj.role || "Developer",
       github: proj.github || "",
       live: proj.live || "",
@@ -149,7 +151,8 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
       architecture: proj.architecture || "",
       metrics: proj.metrics || "",
       featured: proj.featured || false,
-      published: proj.published !== false
+      published: proj.published !== false,
+      pinned: proj.pinned !== false
     });
     setShowFormModal(true);
   };
@@ -314,6 +317,25 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ featured: !proj.featured })
+      });
+      if (res.ok) {
+        fetchAdminProjects();
+        if (onProjectsUpdated) onProjectsUpdated();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleTogglePinned = async (proj) => {
+    try {
+      const res = await fetch(`/api/projects/${proj.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ pinned: !proj.pinned })
       });
       if (res.ok) {
         fetchAdminProjects();
@@ -564,6 +586,11 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="text-white font-bold text-base">{proj.name}</h4>
+                        {proj.pinned !== false && (
+                          <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-semibold flex items-center gap-1">
+                            <Pin size={10} fill="currentColor" /> Pinned
+                          </span>
+                        )}
                         {proj.featured && (
                           <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-brand-yellow border border-amber-500/30 font-semibold flex items-center gap-1">
                             <Star size={10} fill="currentColor" /> Featured
@@ -597,6 +624,17 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
                       title="Move Down"
                     >
                       <ArrowDown size={16} />
+                    </button>
+
+                    {/* Pin Toggle */}
+                    <button
+                      onClick={() => handleTogglePinned(proj)}
+                      className={`p-2 rounded-lg text-xs transition-colors ${
+                        proj.pinned !== false ? "bg-blue-500/20 text-blue-300 border border-blue-500/30" : "bg-white/5 text-gray-400 hover:text-white"
+                      }`}
+                      title={proj.pinned !== false ? "Unpin from Homepage" : "Pin to Homepage (Max 4)"}
+                    >
+                      <Pin size={16} fill={proj.pinned !== false ? "currentColor" : "none"} />
                     </button>
 
                     {/* Featured Toggle */}
@@ -760,11 +798,11 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                       className="w-full bg-[#1E293B] border border-white/10 rounded-xl px-3.5 py-2.5 text-sm text-white focus:border-brand-teal focus:outline-none"
                     >
-                      <option value="Full Stack">Full Stack</option>
-                      <option value="Backend">Backend</option>
-                      <option value="AI & Automation">AI & Automation</option>
-                      <option value="Cybersecurity">Cybersecurity</option>
-                      <option value="Frontend">Frontend</option>
+                      <option value="MERN Full Stack">MERN Full Stack</option>
+                      <option value="Python Full Stack">Python Full Stack</option>
+                      <option value="AI Engineering">AI Engineering</option>
+                      <option value="GenAI Engineering">GenAI Engineering</option>
+                      <option value="n8n Automation">n8n Automation</option>
                     </select>
                   </div>
                   <div>
@@ -871,7 +909,16 @@ const AdminDashboard = ({ isOpen, onClose, token, onLogout, onProjectsUpdated })
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6 pt-2">
+                <div className="flex flex-wrap items-center gap-6 pt-2">
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-300 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.pinned}
+                      onChange={(e) => setFormData({ ...formData, pinned: e.target.checked })}
+                      className="rounded border-white/20 bg-white/5 text-blue-400 focus:ring-blue-400"
+                    />
+                    <span>Pin to Homepage (Max 4 Pinned)</span>
+                  </label>
                   <label className="flex items-center gap-2 text-xs font-semibold text-gray-300 cursor-pointer">
                     <input
                       type="checkbox"

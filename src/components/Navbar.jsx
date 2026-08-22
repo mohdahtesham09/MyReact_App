@@ -11,7 +11,7 @@ const navLinks = [
   { name: "Contact", href: "#contact" },
 ];
 
-const Navbar = ({ onOpenAIChat, onOpenAdminLogin, isAdminLoggedIn, onOpenAdminDashboard, theme, toggleTheme }) => {
+const Navbar = ({ onOpenAIChat, onOpenAdminLogin, isAdminLoggedIn, onOpenAdminDashboard, theme, toggleTheme, onNavigateHome }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
@@ -72,6 +72,7 @@ const Navbar = ({ onOpenAIChat, onOpenAdminLogin, isAdminLoggedIn, onOpenAdminDa
           {/* Logo */}
           <a
             href="#home"
+            onClick={onNavigateHome}
             className="flex items-center gap-2 font-semibold text-sm tracking-tight shrink-0 transition-opacity hover:opacity-75"
             style={{ color: "var(--text-primary)" }}
           >
@@ -96,6 +97,7 @@ const Navbar = ({ onOpenAIChat, onOpenAdminLogin, isAdminLoggedIn, onOpenAdminDa
               <a
                 key={link.name}
                 href={link.href}
+                onClick={onNavigateHome}
                 className="px-3 py-1.5 rounded-full text-[11.5px] font-medium transition-all duration-200"
                 style={{
                   color: isActive(link.href) ? "var(--text-primary)" : "var(--text-secondary)",
@@ -208,7 +210,7 @@ const Navbar = ({ onOpenAIChat, onOpenAdminLogin, isAdminLoggedIn, onOpenAdminDa
                   color: isActive(link.href) ? "var(--text-primary)" : "var(--text-secondary)",
                   backgroundColor: isActive(link.href) ? "var(--bg-elevated)" : "transparent",
                 }}
-                onClick={() => setIsOpen(false)}
+                onClick={() => { setIsOpen(false); if (onNavigateHome) onNavigateHome(); }}
               >
                 {link.name}
               </a>

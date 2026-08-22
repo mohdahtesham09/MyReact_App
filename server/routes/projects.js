@@ -84,6 +84,7 @@ router.post('/', authenticateAdmin, (req, res) => {
     metrics: req.body.metrics || '',
     featured: req.body.featured !== undefined ? req.body.featured : false,
     published: req.body.published !== undefined ? req.body.published : true,
+    pinned: req.body.pinned !== undefined ? req.body.pinned : false,
     order: projects.length + 1
   };
 

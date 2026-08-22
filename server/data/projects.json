@@ -14,7 +14,7 @@
       "Responsive glassmorphism UI built with React and Tailwind CSS"
     ],
     "technologies": ["React", "Node.js", "Express", "MongoDB", "Tailwind CSS", "JWT"],
-    "category": "Full Stack",
+    "category": "MERN Full Stack",
     "role": "Full Stack Developer",
     "github": "https://github.com/mohdahtesham09",
     "live": "https://mediastack.in",
@@ -26,6 +26,7 @@
     "metrics": "Sub-100ms API responses and clean modular state management across dynamic routes.",
     "featured": true,
     "published": true,
+    "pinned": true,
     "order": 1
   },
   {
@@ -43,7 +44,7 @@
       "Modular MVC code layout for scalable maintainability"
     ],
     "technologies": ["Node.js", "Express", "MongoDB", "REST API", "JWT", "Bcrypt"],
-    "category": "Backend",
+    "category": "Python Full Stack",
     "role": "Backend Developer",
     "github": "https://github.com/mohdahtesham09",
     "live": "#",
@@ -55,6 +56,7 @@
     "metrics": "100% data verification compliance across simulated high-concurrency transaction bursts.",
     "featured": true,
     "published": true,
+    "pinned": true,
     "order": 2
   },
   {
@@ -72,7 +74,7 @@
       "React dashboard for appointment overview and agent analytics"
     ],
     "technologies": ["TypeScript", "React", "Vapi Voice AI", "n8n Workflows", "Groq API", "Tailwind CSS"],
-    "category": "AI & Automation",
+    "category": "n8n Automation",
     "role": "Full Stack & AI Automation Developer",
     "github": "https://github.com/mohdahtesham09",
     "live": "#",
@@ -84,6 +86,7 @@
     "metrics": "80%+ reduction in manual booking response times for clinical trial workflows.",
     "featured": true,
     "published": true,
+    "pinned": true,
     "order": 3
   },
   {
@@ -101,7 +104,7 @@
       "Node.js backend proxy with rate-limiting and prompt security"
     ],
     "technologies": ["React", "Node.js", "Express", "Groq API", "RAG", "Tailwind CSS"],
-    "category": "AI & Automation",
+    "category": "GenAI Engineering",
     "role": "Full Stack & AI Developer",
     "github": "https://github.com/mohdahtesham09",
     "live": "#",
@@ -113,6 +116,7 @@
     "metrics": "Sub-second AI response latency with seamless full-stack state synchronization.",
     "featured": true,
     "published": true,
+    "pinned": true,
     "order": 4
   },
   {
@@ -129,7 +133,7 @@
       "Vulnerability assessment reports for enterprise architecture"
     ],
     "technologies": ["Java", "Cryptography", "Security Protocols", "Vulnerability Analysis"],
-    "category": "Cybersecurity",
+    "category": "Python Full Stack",
     "role": "Virtual Intern",
     "github": "https://github.com/mohdahtesham09",
     "live": "#",
@@ -141,6 +145,7 @@
     "metrics": "Completed simulation modules certified by Goldman Sachs software security engineering track.",
     "featured": false,
     "published": true,
-    "order": 4
+    "pinned": false,
+    "order": 5
   }
 ]

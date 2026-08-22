@@ -7,7 +7,7 @@ router.post('/login', (req, res) => {
   const { username, password } = req.body;
 
   const validUser = process.env.ADMIN_USERNAME || 'ahtesham';
-  const validPass = process.env.ADMIN_PASSWORD || 'admin123';
+  const validPass = process.env.ADMIN_PASSWORD || '0912aman';
 
   if (username === validUser && password === validPass) {
     const token = jwt.sign(
